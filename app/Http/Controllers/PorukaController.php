@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Poruka;
 use App\Models\Soba;
 use App\Models\ClanSobe;
+use App\Events\NovaPoruka;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -83,6 +84,8 @@ class PorukaController extends Controller
 
         // Učitavanje korisnika za odgovor
         $poruka->load('korisnik');
+
+        event(new NovaPoruka($poruka));
 
         return response()->json([
             'success' => true,

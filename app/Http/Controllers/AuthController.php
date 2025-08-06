@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Events\KorisnikOnlineStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,9 @@ class AuthController extends Controller
             'poslednja_aktivnost' => now()
         ]);
 
+        // Broadcast online statusa
+        event(new KorisnikOnlineStatus($user, true));
+
         return response()->json([
             'success' => true,
             'message' => 'Uspešna prijava',
@@ -104,6 +108,9 @@ class AuthController extends Controller
             'je_online' => false,
             'poslednja_aktivnost' => now()
         ]);
+
+        // Broadcast offline statusa
+        event(new KorisnikOnlineStatus($user, false));
 
         // Brisanje tokena
         $user->tokens()->delete();
