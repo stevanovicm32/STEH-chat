@@ -15,9 +15,6 @@ return new class extends Migration
             $table->string('naziv', 100)->change();
             $table->text('opis')->nullable()->change();
             $table->integer('maksimalan_broj_clanova')->unsigned()->change();
-            
-            // Dodavanje ograničenja
-            $table->check('maksimalan_broj_clanova > 0 AND maksimalan_broj_clanova <= 1000');
         });
     }
 
