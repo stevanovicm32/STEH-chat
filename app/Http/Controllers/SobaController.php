@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Soba;
 use App\Models\ClanSobe;
+use App\Http\Resources\SobaResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -16,13 +17,13 @@ class SobaController extends Controller
     public function index(): JsonResponse
     {
         $sobe = Soba::where('je_javna', true)
-                    ->withCount('clanovi')
+                    ->withCount(['clanovi', 'poruke'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $sobe
+            'data' => SobaResource::collection($sobe)
         ]);
     }
 
@@ -84,7 +85,7 @@ class SobaController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $soba
+            'data' => new SobaResource($soba)
         ]);
     }
 
